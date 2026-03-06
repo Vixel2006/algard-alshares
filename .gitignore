@@ -8,3 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Planning files
+TODO.md
+SPEC.md
+

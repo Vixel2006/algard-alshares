@@ -1,6 +1,7 @@
 from typing import Literal
 from pydantic import BaseModel
 
+
 class FunctionInfo(BaseModel):
     name: str
     file_path: str
@@ -10,14 +11,15 @@ class FunctionInfo(BaseModel):
     test_file: str | None = None
     test_function_names: list[str] = []
 
+
 class VulnerabilityReport(BaseModel):
     function_name: str
     file_path: str
     is_vulnerable: bool
     cwe_id: str | None = None
     severity: Literal["critical", "high", "medium", "low"]
-    explanation: str
     confidence: float
+
 
 class Patch(BaseModel):
     function_name: str
@@ -26,6 +28,7 @@ class Patch(BaseModel):
     patched_code: str
     explanation: str
     diff: str
+
 
 class VerificationResult(BaseModel):
     function_name: str

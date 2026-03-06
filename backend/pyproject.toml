@@ -19,8 +19,7 @@ dependencies = [
     "tree-sitter-typescript>=0.23.2",
     "tree-sitter-go>=0.25.0",
     "tree-sitter-java>=0.23.5",
-    "torch>=2.5.1",
-    "accelerate>=1.1.0",
+    "pytest>=9.0.2",
 ]
 
 [project.optional-dependencies]
@@ -32,3 +31,4 @@ dev = [
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+pythonpath = ["src"]
