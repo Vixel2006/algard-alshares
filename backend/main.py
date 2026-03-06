@@ -1,5 +1,6 @@
 from gard.extractor.python_parser import PythonParser
 from gard.critic.detector import VulnerabilityDetector
+from gard.actor import run_actor_agent
 from gard.models import FunctionInfo
 
 
@@ -52,6 +53,15 @@ def main():
         print(f"  Status: {status}")
         print(f"  Severity: {report.severity}")
         print(f"  Confidence: {report.confidence:.2%}")
+
+        if report.is_vulnerable:
+            func = next(f for f in functions if f.name == report.function_name)
+            print("\n--- Generating patch ---\n")
+            patch = run_actor_agent(func, report)
+            print(f"  Explanation: {patch.explanation}")
+            print(f"\n  Diff:")
+            for line in patch.diff.split("\n"):
+                print(f"    {line}")
         print()
 
 

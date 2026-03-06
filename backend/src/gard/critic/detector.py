@@ -115,8 +115,9 @@ class VulnerabilityDetector:
                 predictions = torch.argmax(logits, dim=1)
 
             for idx, func in enumerate(batch):
-                is_vulnerable = predictions[idx].item() == 1
-                confidence = probabilities[idx][predictions[idx].item()].item()
+                pred_idx = int(predictions[idx].item())
+                is_vulnerable = pred_idx == 1
+                confidence = float(probabilities[idx][pred_idx].item())
 
                 severity = "medium"
                 if confidence > 0.9 and is_vulnerable:

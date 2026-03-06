@@ -13,3 +13,6 @@ wheels/
 TODO.md
 SPEC.md
 
+# environment variables
+.env
+
