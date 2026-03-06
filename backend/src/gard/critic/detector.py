@@ -8,32 +8,6 @@ from gard.logger import get_logger
 
 logger = get_logger(__name__)
 
-CWE_PATTERNS = {
-    "sql": "CWE-89",
-    "injection": "CWE-94",
-    "xss": "CWE-79",
-    "path": "CWE-22",
-    "eval": "CWE-94",
-    "deserialize": "CWE-502",
-    "weak": "CWE-327",
-    "hardcode": "CWE-798",
-    "random": "CWE-338",
-    "permission": "CWE-284",
-    "auth": "CWE-287",
-    "crypto": "CWE-310",
-    "buffer": "CWE-119",
-    "overflow": "CWE-119",
-    "null": "CWE-476",
-    "race": "CWE-362",
-    "deadlock": "CWE-833",
-    "dos": "CWE-400",
-    "bypass": "CWE-284",
-    "xxe": "CWE-611",
-    "ssrf": "CWE-918",
-    "csrf": "CWE-352",
-    "spoofing": "CWE-287",
-}
-
 
 class ModelCache:
     _instance: Optional["ModelCache"] = None
@@ -83,13 +57,6 @@ class VulnerabilityDetector:
         )
         self.model.eval()
 
-    def _detect_cwe_from_code(self, code: str) -> str:
-        code_lower = code.lower()
-        for pattern, cwe_id in CWE_PATTERNS.items():
-            if pattern in code_lower:
-                return cwe_id
-        return "CWE-Other"
-
     def detect_vulnerabilities(
         self, functions: list[FunctionInfo], batch_size: int = 4
     ) -> list[VulnerabilityReport]:
@@ -119,22 +86,10 @@ class VulnerabilityDetector:
                 is_vulnerable = pred_idx == 1
                 confidence = float(probabilities[idx][pred_idx].item())
 
-                severity = "medium"
-                if confidence > 0.9 and is_vulnerable:
-                    severity = "high"
-                elif confidence < 0.7:
-                    severity = "low"
-
-                cwe_id = None
-                if is_vulnerable:
-                    cwe_id = self._detect_cwe_from_code(func.code)
-
                 report = VulnerabilityReport(
                     function_name=func.name,
                     file_path=func.file_path,
                     is_vulnerable=is_vulnerable,
-                    cwe_id=cwe_id,
-                    severity=severity,
                     confidence=confidence,
                 )
                 reports.append(report)

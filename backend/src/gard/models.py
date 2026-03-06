@@ -16,8 +16,6 @@ class VulnerabilityReport(BaseModel):
     function_name: str
     file_path: str
     is_vulnerable: bool
-    cwe_id: str | None = None
-    severity: Literal["critical", "high", "medium", "low"]
     confidence: float
 
 

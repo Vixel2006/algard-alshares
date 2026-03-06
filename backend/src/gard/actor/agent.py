@@ -29,7 +29,6 @@ def generate_patch_node(state: ActorState) -> ActorState:
     logger.info(
         "generate_patch_node called",
         function=state["function_info"].name,
-        cwe=state["vulnerability_report"].cwe_id,
     )
 
     generator = get_patch_generator()

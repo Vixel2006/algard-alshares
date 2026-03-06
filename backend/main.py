@@ -51,8 +51,6 @@ def main():
         status = "VULNERABLE" if report.is_vulnerable else "SAFE"
         print(f"Function: {report.function_name}")
         print(f"  Status: {status}")
-        print(f"  Severity: {report.severity}")
-        print(f"  Confidence: {report.confidence:.2%}")
 
         if report.is_vulnerable:
             func = next(f for f in functions if f.name == report.function_name)
