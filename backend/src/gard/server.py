@@ -1,11 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
 from gard.logger import setup_logger, logger
-from gard.models import VulnerabilityReport, Patch, VerificationResult, FunctionInfo
+from gard.models import VulnerabilityReport, Patch, VerificationResult, FunctionInfo, FullVulnerabilityReport
 from gard.extractor.extractor import FunctionExtractor
+from gard.pipeline import SecurePatchPipeline
 
 setup_logger()
 app = FastAPI(title="SecurePatch Backend")
 extractor = FunctionExtractor()
+pipeline = SecurePatchPipeline()
 
 @app.get("/health")
 async def health_check():
@@ -19,19 +21,23 @@ async def extract_workspace_functions(workspace_path: str):
     return {"status": "success", "functions": functions}
 
 @app.post("/scan")
+async def scan_workspace(workspace_path: str):
+    logger.info("scan_workspace_called", path=workspace_path)
+    reports = await pipeline.run_full_scan(workspace_path)
+    return {"status": "success", "reports": reports}
+
+@app.post("/scan-function")
 async def scan_vulnerabilities(report: VulnerabilityReport):
-    # Placeholder for Critic Agent
+    # This remains for single function scan if needed
     logger.info("scan_vulnerabilities_called", function=report.function_name)
     return {"status": "received", "report": report}
 
 @app.post("/patch")
 async def generate_patch(patch: Patch):
-    # Placeholder for Actor Agent
     logger.info("generate_patch_called", function=patch.function_name)
     return {"status": "received", "patch": patch}
 
 @app.post("/verify")
 async def verify_patch(result: VerificationResult):
-    # Placeholder for Verifier Agent
     logger.info("verify_patch_called", function=result.function_name)
     return {"status": "received", "result": result}

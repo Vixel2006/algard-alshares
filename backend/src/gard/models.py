@@ -35,3 +35,10 @@ class VerificationResult(BaseModel):
     tests_passed: int
     test_output: str
     regression_detected: bool
+
+
+class FullVulnerabilityReport(BaseModel):
+    function: FunctionInfo
+    vulnerability: VulnerabilityReport
+    patch: Patch | None = None
+    verification: VerificationResult | None = None

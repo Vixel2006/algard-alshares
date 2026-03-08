@@ -8,7 +8,7 @@ def setup_logger():
         processors=[
             structlog.processors.add_log_level,
             structlog.processors.StackInfoRenderer(),
-            structlog.processors.dev.set_exc_info,
+            structlog.dev.set_exc_info,
             structlog.processors.TimeStamper(fmt="iso"),
             structlog.processors.format_exc_info,
             structlog.processors.JSONRenderer(),

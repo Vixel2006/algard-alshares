@@ -89,14 +89,21 @@ Respond only with valid JSON, no additional text.
             contents=prompt,
         )
 
+        response_text = response.text
+        # Clean up the response if it's wrapped in markdown code blocks
+        if "```json" in response_text:
+            response_text = response_text.split("```json")[-1].split("```")[0].strip()
+        elif "```" in response_text:
+            response_text = response_text.split("```")[-1].split("```")[0].strip()
+
         try:
-            result = json.loads(response.text)
+            result = json.loads(response_text)
             patched_code = result.get("patched_code", "")
             explanation = result.get("explanation", "No explanation provided")
         except json.JSONDecodeError as e:
-            logger.error("Failed to parse Gemini response", error=str(e))
+            logger.error("Failed to parse Gemini response", error=str(e), text=response.text)
             patched_code = function_info.code
-            explanation = "Failed to generate patch"
+            explanation = "Failed to generate patch: Invalid JSON response from model"
 
         diff = generate_diff(function_info.code, patched_code)
 
@@ -110,5 +117,5 @@ Respond only with valid JSON, no additional text.
         )
 
 
-def get_patch_generator(model_name: str = "gemini-2.0-flash") -> PatchGenerator:
+def get_patch_generator(model_name: str = "gemini-2.5-flash") -> PatchGenerator:
     return PatchGenerator(model_name)
