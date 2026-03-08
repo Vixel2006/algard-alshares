@@ -10,8 +10,8 @@ wheels/
 .venv
 
 # Planning files
-TODO.md
-SPEC.md
+#TODO.md
+#SPEC.md
 
 # environment variables
 .env
